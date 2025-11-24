@@ -105,19 +105,22 @@ python scripts/visualization/plot_genome_wide_ideogram.py \
 
 ### 2. SV Detection
 - **detect_sv_molecules.py**: Extract SVs from BAM files with genomic and read-level positions
+  - Outputs: SV catalogs, molecule summaries, 178bp-multiple lists
+  - Tracks position on both genome and individual reads
 - **create_rdna_beds.py**: Generate BED files for rDNA regions from GFF annotations
 
-### 3. Analysis
-- **compare_samples.py**: Compare SV rates between samples with statistical tests
-- **normalize_by_mapped_bases.py**: Calculate region-specific normalization factors
-- **analyze_repeat_multiples.py**: Identify exact satellite unit multiples
+### 3. Analysis & Normalization
+- **normalize_by_mapped_bases.py**: Calculate SVs per Mb for fair cross-sample comparison
+  - **IMPORTANT**: Accounts for read length (N50) differences
+  - Run AFTER SV detection on all samples
+  - See `docs/normalization_guide.md` for detailed usage
+  - Outputs: Normalized rates table, comparison plots
 
 ### 4. Visualization
 - **plot_genome_wide_ideogram.py**: Create comprehensive genome-wide summary plots
-- **plot_density_heatmap.py**: Generate density tracks across chromosomes
-- **plot_size_distributions.py**: Visualize SV size distributions
-- **plot_fold_changes.py**: Compare enrichment between samples
-- **plot_insertions_vs_deletions.py**: Side-by-side INS/DEL comparison
+  - Shows all chromosomes with annotated genomic features
+  - Displays SV positions across the genome
+  - Can annotate with normalized per-Mb rates
 
 ## Configuration
 
@@ -171,6 +174,39 @@ paths:
 - `genome_wide_fold_change.png`: Sample comparison in sliding windows
 - `178bp_multiples_comparison_normalized.png`: Mb-normalized comparisons
 - `insertions_vs_deletions_comparison.png`: INS vs DEL analysis
+
+## Complete Workflow
+
+### Basic Analysis (Single Sample)
+```bash
+# 1. Detect SVs
+bash run_pipeline.sh -b sample.bam -s MySample -o results -c config.yaml
+
+# That's it! You get: SV catalogs, molecule summaries, ideogram plot
+```
+
+### Comparative Analysis (Multiple Samples)
+```bash
+# 1. Detect SVs in each sample
+bash run_pipeline.sh -b sample1.bam -s Sample1 -o results -c config.yaml
+bash run_pipeline.sh -b sample2.bam -s Sample2 -o results -c config.yaml
+
+# 2. Normalize by mapped bases (IMPORTANT for fair comparison!)
+python scripts/analysis/normalize_by_mapped_bases.py \
+    sample1.bam results/sv_molecules Sample1 \
+    sample2.bam results/sv_molecules Sample2 \
+    results/normalized
+
+# 3. Generate comparison plot
+python scripts/visualization/plot_genome_wide_ideogram.py \
+    --sv-catalogs results/sv_molecules/Sample1_sv_catalog.tsv \
+                  results/sv_molecules/Sample2_sv_catalog.tsv \
+    --sample-names "Sample 1" "Sample 2" \
+    --config config.yaml \
+    --output results/plots/comparison.png
+```
+
+**See `docs/normalization_guide.md` for detailed normalization instructions.**
 
 ## Example Analysis
 
