@@ -1,0 +1,123 @@
+# SV Satellite Analyzer Configuration Template
+# Copy this file and edit for your specific analysis
+
+# ============================================================================
+# GENOME CONFIGURATION
+# ============================================================================
+genome:
+  name: "TAIR12"  # Reference genome name
+
+  # Nuclear chromosomes (organellar chromosomes excluded)
+  chromosomes:
+    - Chr1
+    - Chr2
+    - Chr3
+    - Chr4
+    - Chr5
+
+  # Chromosome lengths (bp)
+  lengths:
+    Chr1: 30427671
+    Chr2: 19698289
+    Chr3: 23459830
+    Chr4: 18585056
+    Chr5: 26975502
+
+# ============================================================================
+# GENOMIC FEATURES
+# ============================================================================
+
+# Centromere coordinates (1-based, inclusive)
+centromeres:
+  Chr1: [14853761, 17129892]
+  Chr2: [9388656, 11655818]
+  Chr3: [13593457, 15740665]
+  Chr4: [8384369, 11037620]
+  Chr5: [12371485, 15175824]
+
+# Pericentromere extension (bp flanking centromere on each side)
+pericentromere_extension: 500000
+
+# rDNA region BED files (0-based, half-open coordinates)
+rdna_regions:
+  5s: "/path/to/5s_rdna_regions.bed"
+  45s: "/path/to/45s_rdna_regions.bed"
+
+# ============================================================================
+# ANALYSIS PARAMETERS
+# ============================================================================
+
+analysis:
+  # Minimum SV size to extract (bp)
+  min_sv_size: 50
+
+  # Satellite repeat unit size for identifying exact multiples (bp)
+  # For Arabidopsis centromeric repeats: 178
+  satellite_repeat_size: 178
+
+  # Window size for density calculations (bp)
+  window_size: 500000
+
+  # Mapping quality filter (reads below this are excluded)
+  min_mapping_quality: 0
+
+# ============================================================================
+# SAMPLE INFORMATION
+# ============================================================================
+
+samples:
+  # Add your samples here
+  # Format:
+  # sample_name:
+  #   bam: /path/to/sample.bam
+  #   label: "Display Name"
+  #   color: "#hexcolor"
+
+  wildtype:
+    bam: "/path/to/wildtype.bam"
+    label: "Col-0"
+    color: "#2ecc71"
+
+  mutant:
+    bam: "/path/to/mutant.bam"
+    label: "atxr56"
+    color: "#9b59b6"
+
+# ============================================================================
+# OUTPUT SETTINGS
+# ============================================================================
+
+output:
+  # Base output directory
+  base_dir: "results"
+
+  # Subdirectories
+  sv_molecules: "sv_molecules"
+  statistics: "statistics"
+  plots: "plots"
+
+  # Plot settings
+  dpi: 300
+  figure_format: "png"
+
+# ============================================================================
+# VISUALIZATION
+# ============================================================================
+
+visualization:
+  # Color schemes
+  colors:
+    insertions: "#3498db"  # Blue
+    deletions: "#e74c3c"   # Red
+    centromere: "#e74c3c"  # Red
+    pericentromere: "#f39c12"  # Orange
+    rdna_5s: "#27ae60"  # Green
+    rdna_45s: "#8e44ad"  # Purple
+    arms: "#95a5a6"  # Gray
+
+  # Font sizes
+  font_sizes:
+    title: 16
+    axis_label: 12
+    tick_label: 10
+    legend: 10

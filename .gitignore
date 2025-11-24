@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files (too large for git)
+*.bam
+*.bam.bai
+*.fasta
+*.fa
+*.fq
+*.fastq
+*.gz
+*.vcf
+
+# Results (generated files)
+results/
+output/
+plots/
+*.png
+*.pdf
+*.svg
+*.tsv
+*.csv
+
+# Logs
+*.log
+
+# Config (keep template only)
+config/*
+!config/config_template.yaml
+
+# OS
+.DS_Store
+Thumbs.db
