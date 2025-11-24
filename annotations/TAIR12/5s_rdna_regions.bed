@@ -1,0 +1,5 @@
+# 5S rDNA regions (TAIR12)
+# BED format: 0-based, half-open [start, end)
+# chrom	start	end	name
+Chr3	16497982	16885266	5S_rDNA_1
+Chr4	6980847	7497506	5S_rDNA_2

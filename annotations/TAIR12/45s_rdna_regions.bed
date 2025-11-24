@@ -1,0 +1,5 @@
+# 45S rDNA regions (TAIR12)
+# BED format: 0-based, half-open [start, end)
+# chrom	start	end	name
+Chr2	311	5412003	45S_rDNA_1
+Chr4	1735	3848707	45S_rDNA_2

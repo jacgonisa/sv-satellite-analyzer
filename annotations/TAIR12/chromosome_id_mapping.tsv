@@ -1,0 +1,8 @@
+# TAIR12 chromosome ID mapping
+# Maps between RefSeq accession IDs and common chromosome names
+# Format: accession_id	common_name	length_bp
+CP116280.1	Chr1	30427671
+CP116281.2	Chr2	19698289
+CP116282.1	Chr3	23459830
+CP116283.2	Chr4	18585056
+CP116284.1	Chr5	26975502
