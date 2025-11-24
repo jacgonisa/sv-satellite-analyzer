@@ -39,9 +39,10 @@ centromeres:
 pericentromere_extension: 500000
 
 # rDNA region BED files (0-based, half-open coordinates)
+# Example paths for TAIR12 (included in annotations/TAIR12/)
 rdna_regions:
-  5s: "/path/to/5s_rdna_regions.bed"
-  45s: "/path/to/45s_rdna_regions.bed"
+  5s: "annotations/TAIR12/5s_rdna_regions.bed"
+  45s: "annotations/TAIR12/45s_rdna_regions.bed"
 
 # ============================================================================
 # ANALYSIS PARAMETERS

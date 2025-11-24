@@ -37,6 +37,21 @@ This pipeline identifies, quantifies, and visualizes structural variations (inse
   - Fold-change comparisons
   - Single-molecule SV positions
 
+## Included Annotations
+
+**TAIR12 (*Arabidopsis thaliana*) genome annotations are included** in `annotations/TAIR12/`:
+
+- **Centromeres** - 178bp satellite repeat arrays for all 5 chromosomes
+- **Pericentromeres** - Flanking regions adjacent to centromeres
+- **5S rDNA** - 5S ribosomal DNA arrays (Chr3, Chr4)
+- **45S rDNA** - Nucleolar Organizing Regions/NORs (Chr2, Chr4)
+- **Chromosome sizes** - Complete chromosome length information
+- **ID mapping** - RefSeq accession ↔ Chr name conversion
+
+See `annotations/TAIR12/README.md` for detailed coordinate information and sources.
+
+**For other organisms**: Use the same directory structure and BED format. See configuration section below.
+
 ## Requirements
 
 ### Software
