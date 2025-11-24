@@ -1,8 +1,20 @@
 # SV Satellite Analyzer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![GitHub repo](https://img.shields.io/badge/github-sv--satellite--analyzer-blue.svg)](https://github.com/jacgonisa/sv-satellite-analyzer)
+
 **A comprehensive pipeline for analyzing structural variations in satellite repeats from long-read sequencing data**
 
 Developed for analyzing centromeric satellite repeat dynamics in *Arabidopsis thaliana*, but generalizable to any organism with tandem repeats.
+
+## Example Output
+
+<p align="center">
+  <img src="example_output/genome_wide_ideogram_summary.png" width="100%" alt="Genome-wide ideogram showing 178bp-multiple SVs">
+  <br>
+  <em>Genome-wide distribution of 178bp-multiple SVs in Arabidopsis Col-0 vs atxr56 mutant</em>
+</p>
 
 ## Overview
 
@@ -46,8 +58,8 @@ This pipeline identifies, quantifies, and visualizes structural variations (inse
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/sv_satellite_analyzer.git
-cd sv_satellite_analyzer
+git clone https://github.com/jacgonisa/sv-satellite-analyzer.git
+cd sv-satellite-analyzer
 
 # 2. Install dependencies
 conda env create -f environment.yml
@@ -170,8 +182,8 @@ MIT License - see LICENSE file for details
 
 ## Contact
 
-- Issues: https://github.com/yourusername/sv_satellite_analyzer/issues
-- Email: your.email@institution.edu
+- Issues: https://github.com/jacgonisa/sv-satellite-analyzer/issues
+- GitHub: [@jacgonisa](https://github.com/jacgonisa)
 
 ## Acknowledgments
 
