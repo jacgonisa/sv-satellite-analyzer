@@ -51,6 +51,41 @@ def load_bed_regions(bed_file):
     return regions
 
 
+def load_pericentromeres(bed_file):
+    """Load pericentromere coordinates from BED file, grouped by chromosome."""
+    peri_dict = {}
+    if not os.path.exists(bed_file):
+        print(f"Warning: Pericentromere BED file not found: {bed_file}")
+        return peri_dict
+
+    # Mapping RefSeq accession IDs to common chromosome names
+    chr_map = {
+        'CP116280.1': 'Chr1',
+        'CP116281.2': 'Chr2',
+        'CP116282.1': 'Chr3',
+        'CP116283.2': 'Chr4',
+        'CP116284.1': 'Chr5',
+    }
+
+    with open(bed_file, 'r') as f:
+        for line in f:
+            if line.startswith('#') or not line.strip():
+                continue
+            fields = line.strip().split('\t')
+            if len(fields) >= 3:
+                accession = fields[0]
+                # Convert RefSeq ID to common name if needed
+                chrom = chr_map.get(accession, accession)
+                start = int(fields[1])
+                end = int(fields[2])
+
+                if chrom not in peri_dict:
+                    peri_dict[chrom] = []
+                peri_dict[chrom].append((start, end))
+
+    return peri_dict
+
+
 def plot_genome_wide_ideogram(sv_catalogs, sample_names, config, output_file):
     """
     Generate genome-wide ideogram plot.
@@ -77,7 +112,21 @@ def plot_genome_wide_ideogram(sv_catalogs, sample_names, config, output_file):
     chroms = config['genome']['chromosomes']
     chrom_lengths = config['genome']['lengths']
     centromeres = config['genome']['centromeres']
-    peri_extension = config['pericentromere_extension']
+
+    # Load pericentromere regions from BED file if provided
+    if 'pericentromere_bed' in config and config['pericentromere_bed']:
+        pericentromeres = load_pericentromeres(config['pericentromere_bed'])
+    else:
+        # Fallback to extension-based calculation if BED not provided
+        peri_extension = config.get('pericentromere_extension', 500000)
+        pericentromeres = {}
+        for chrom in chroms:
+            cen_start, cen_end = centromeres[chrom]
+            chrom_len = chrom_lengths[chrom]
+            pericentromeres[chrom] = [
+                (max(0, cen_start - peri_extension), cen_start),
+                (cen_end, min(chrom_len, cen_end + peri_extension))
+            ]
 
     # Load rDNA regions
     rdna_5s = load_bed_regions(config['rdna_regions']['5s'])
@@ -115,20 +164,17 @@ def plot_genome_wide_ideogram(sv_catalogs, sample_names, config, output_file):
             y_pos = i * chrom_spacing
             chrom_len = chrom_lengths[chrom]
             cen_start, cen_end = centromeres[chrom]
-            peri_start_left = max(0, cen_start - peri_extension)
-            peri_end_right = min(chrom_len, cen_end + peri_extension)
 
             # Draw chromosome backbone
             ax.plot([0, chrom_len/1e6], [y_pos, y_pos], 'k-',
                    linewidth=10, solid_capstyle='round', alpha=0.2)
 
-            # Draw pericentromeres
-            ax.plot([peri_start_left/1e6, cen_start/1e6], [y_pos, y_pos],
-                   color=config['visualization']['colors']['pericentromere'],
-                   linewidth=10, solid_capstyle='round', alpha=0.6)
-            ax.plot([cen_end/1e6, peri_end_right/1e6], [y_pos, y_pos],
-                   color=config['visualization']['colors']['pericentromere'],
-                   linewidth=10, solid_capstyle='round', alpha=0.6)
+            # Draw pericentromeres from loaded regions
+            if chrom in pericentromeres:
+                for peri_start, peri_end in pericentromeres[chrom]:
+                    ax.plot([peri_start/1e6, peri_end/1e6], [y_pos, y_pos],
+                           color=config['visualization']['colors']['pericentromere'],
+                           linewidth=10, solid_capstyle='round', alpha=0.6)
 
             # Draw centromere
             ax.plot([cen_start/1e6, cen_end/1e6], [y_pos, y_pos],
@@ -172,23 +218,17 @@ def plot_genome_wide_ideogram(sv_catalogs, sample_names, config, output_file):
                            edgecolor=config['visualization']['colors']['centromere'],
                            linewidth=1.5))
 
-            # Add pericentromere labels
-            peri_left_mid = (peri_start_left + cen_start) / 2 / 1e6
-            peri_right_mid = (cen_end + peri_end_right) / 2 / 1e6
-            ax.text(peri_left_mid, y_pos - 0.55, 'PERI', fontsize=7, ha='center',
-                   fontweight='normal',
-                   color=config['visualization']['colors']['pericentromere'],
-                   alpha=0.8,
-                   bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
-                           edgecolor=config['visualization']['colors']['pericentromere'],
-                           linewidth=1))
-            ax.text(peri_right_mid, y_pos - 0.55, 'PERI', fontsize=7, ha='center',
-                   fontweight='normal',
-                   color=config['visualization']['colors']['pericentromere'],
-                   alpha=0.8,
-                   bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
-                           edgecolor=config['visualization']['colors']['pericentromere'],
-                           linewidth=1))
+            # Add pericentromere labels at actual region midpoints
+            if chrom in pericentromeres:
+                for peri_start, peri_end in pericentromeres[chrom]:
+                    peri_mid = (peri_start + peri_end) / 2 / 1e6
+                    ax.text(peri_mid, y_pos - 0.55, 'PERI', fontsize=7, ha='center',
+                           fontweight='normal',
+                           color=config['visualization']['colors']['pericentromere'],
+                           alpha=0.8,
+                           bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
+                                   edgecolor=config['visualization']['colors']['pericentromere'],
+                                   linewidth=1))
 
             # Plot SVs
             sample_chrom = df[(df['chromosome'] == chrom) & (df['is_178_multiple'] == True)]

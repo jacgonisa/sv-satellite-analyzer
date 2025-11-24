@@ -35,7 +35,10 @@ centromeres:
   Chr4: [8384369, 11037620]
   Chr5: [12371485, 15175824]
 
-# Pericentromere extension (bp flanking centromere on each side)
+# Pericentromere regions
+# Option 1: Provide BED file with exact coordinates (recommended)
+pericentromere_bed: "annotations/TAIR12/pericentromeres.bed"
+# Option 2: Calculate from centromere extension (used if BED file not provided)
 pericentromere_extension: 500000
 
 # rDNA region BED files (0-based, half-open coordinates)
